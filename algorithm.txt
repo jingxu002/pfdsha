@@ -3,3 +3,8 @@ algorithm of PFDSHA
 read fault trace and seismicity, sequence in segment
 2ed step:
 read site coordinate
+3rd step:
+read coefficient of displacement equation
+the parameter value are
+depend on type of displacement, 
+principal & distributed
