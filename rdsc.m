@@ -7,7 +7,7 @@ function sc=rdsc(inputfile)
 	sc			site coordinate, 2 columns
 %}
 
-fid=fopen(inputfile);
+fid=fopen(inputfile,'rt');
 if isequal(fid,-1)
 	error(' Input file is not exist !');
 end
