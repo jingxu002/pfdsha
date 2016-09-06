@@ -4,7 +4,7 @@ function [gfd,gpfd]=rdques(inputfile)
 % Define Varaables:
 %{
 	inputfile		input file name, string
-	gfd			given fault displacement
+	gfd			    given fault displacement, unit: cm
 	gpfd			given annual exceedance probability of fault displacement
 %}
 
