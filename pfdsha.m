@@ -1,5 +1,6 @@
 function pfd=pfdsha(sc,seg,gfd)
 % PFDSHA: COMPUTE THE ANNUAL PROBABILITY OF DISPLACEMENT ON SITE SC LAGER THAN GIVEN FAULT DISPLACEMENT GFD BY FAULT SEGMENT SEG
+% Calculate only one PFD of one SC of noe GFD, then use bsxfun in programs that cll pfdsha to calculate array SC and GFD
 % Writer: JingXu   Date:2016-09-03    Version: 1.0
 % Define Variables:
 %{
@@ -10,7 +11,7 @@ function pfd=pfdsha(sc,seg,gfd)
 %}
 % local variables:
 %{
-	tydis		type of displacement, principal or distributed
+	tydis		type of displacement, principal or distributed, cell array of string
 	jsc		index of site coordinate
 	mu 		maximum magnitude, Mw
 	nmu		number of maximum magnitude
@@ -21,26 +22,48 @@ function pfd=pfdsha(sc,seg,gfd)
 	degr		denominator in G-R relationship
 	nm		number of magnitude bin
 	mbl	 	magnitude bin length, Mw
+	pm		probability of magnitude m
 	prup		probability of rupture to surface
-	parup		parameters for computing prup
+	parup		parameters of  computing prup
 	r		nearest distance from off-fault site to fault trace,unit: meter
 	srl 		surface rupture length of strike slip fault, unit: km
 	epsrl		epsilon of surface rupture length
 	pepsrl		probability of epsilon of surface rupture length
 	nep		number of  epsilon of srl/fault displacement
+	segl		length of fault segment, unit: km
+	vfdpe		value of parameters of fault displacement predictive equation, structure variable,
+			have fields of: name, rup, dave, dbi, dbin, corrspond to
+			name, probability of surface rupture, average displacement, bilinear equation of displacement, bilinear of normalized displacement
 %}
 
 
 load fdpe
 mbl=0.2;
+% compute length of fault segment, unit: km
+segl=faultlength(seg.coor(:,1),seg.coor(:,2));
+% determine the type of displacement
 tydis=prin_or_dist(sc,seg.coor);
+
+% bring in the parameters of fault displacement predictive equation, 
+if srtcmp(tydis{1},'principal')==1
+	vfdpe=fdpe(1);
+else
+	vfdpe=fdpe(2); 
+	% the nearest distance from sc to segment
+	r=distance(sc,seg.coor);
+end
+
+% epsilon range of surface rupture length
 epsrl=-3:0.3:3;
 pepsrl=(cdf('normal',epsrl+0.15,0,1)-cdf('normal',epsrl-0.15,0,1))...
 /(cdf('normal',3.15,0,1)-cdf('normal',-3.15,0,1));
 nep=length(epsrl);
-pfd=zeros(size(gfd));
+
+% initial annual probability of fault displacement exceedance given fault displacement GFD 
+pfd=0.0;
 
 for imu=1:nmu
+	% bring seismicity parameters in program
 	mu=seg.seis(2*imu-1);
 	pmu=seg.seis(2*imu);
 	m0=seg.seis(2*nmu+1);
@@ -54,22 +77,19 @@ for imu=1:nmu
 	  % log(srl)=a+b*m+epsilon*sigma
 	  for iep=1:nep
 	 	 srl=wells_ss(m,epsrl(iep));
-		 if srl>fl; sprint('surface rupture length is lager than fault segment length, caution!'); end
+		 while srl<=segl
+			% surface rupture length SRL must be less  than fault segment length SEGL, caution! 
+			% start to compute pfd !
+			if srtcmp(tydis{1},'principal')==1
+				temp=vfdpe.rup(1)*m+vfdpe.rup(2)
+				prup=exp(temp)/(1+exp(temp));
+			else
+				prup=
+			end
+		 end
 
-	if strcmp(tydis(sc),'principal')==1
-		parup=fdpe(1).rup;
-	  	prup=exp(parup(1)+m*parup(2))/(1+exp(parup(1)+m*parup(2)));
-	else
-		r=distance(sc,seg.coor);
-		parup=fdpe(2).rup;
-		prup=exp(parup(1)*log(r)+parup(2)); % r: nearest distance from site to fault;
-	end
-    for il=1:nepl
-      for id=1:nepd
-	pfd=pmu*pm*pepl*pepd*prup*p(sl|rup)*p(d>gfd);
-      end
-    end
-  	end
+		
+    	end
   end
 end
 
