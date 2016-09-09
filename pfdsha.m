@@ -80,12 +80,24 @@ for imu=1:nmu
 		 while srl<=segl
 			% surface rupture length SRL must be less  than fault segment length SEGL, caution! 
 			% start to compute pfd !
+			% 1st, the probability of rupture
 			if srtcmp(tydis{1},'principal')==1
 				temp=vfdpe.rup(1)*m+vfdpe.rup(2)
 				prup=exp(temp)/(1+exp(temp));
+
 			else
-				prup=
+				% distributed fault displacement, need to interplot rupture probability or 
+				% compute by different equation, use 200x200 grid here, 
+				% if need to use different grid, refer to Petersen et al. 2011
+				if r>=400 % unit: meter
+					temp=vfdpe.rup(1)*log(r)+vfdpe.rup(2); prup=exp(temp);
+				else
+					prup=interp1([0,200,400],[0.925,0.190,0.075],r);
+				end
 			end
+
+
+
 		 end
 
 		
