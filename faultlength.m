@@ -15,6 +15,8 @@ function segl=faultlength(coor)
 %{
 	sort x coordiante in ascending, compute the distance between neabor points,
 	then summary togather
+	There will be a problem, when the fault length near a circle, but,
+	in the actual questions, fault segments near lines,
 %}
 
 [nr,nc]=size(coor);

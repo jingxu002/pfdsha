@@ -105,13 +105,5 @@ for imu=1:nmu
   end
 end
 
-function nd=distance(sc,fault)
-% DISTANCE: SUBFUNCTION TO CALCULATE THE NEAREST DISTANCE FROM SITE TO FAULT TRACE
-% Define variables:
-%{
-	sc		site coordinate, unit: km
-	fault 		fault trace, unit: km
-	nd 		nearest distance from site to fault, nuit: meter
-%}
 
 
