@@ -34,6 +34,9 @@ function pfd=pfdsha(sc,seg,gfd)
 	vfdpe		value of parameters of fault displacement predictive equation, structure variable,
 			have fields of: name, rup, dave, dbi, dbin, corrspond to
 			name, probability of surface rupture, average displacement, bilinear equation of displacement, bilinear of normalized displacement
+	strike,lenpp	strike, unit: degree, from East, anti-clock wise; length, unit: km, length of line segment between nebour points on fault trace
+	nlen		number of length of line segment between points on fault trace
+	acc_len		accumulate length of lien segment between points on fault trace, unit: km
 %}
 
 
@@ -43,7 +46,14 @@ mbl=0.2;
 segl=faultlength(seg.coor(:,1),seg.coor(:,2));
 % determine the type of displacement
 tydis=prin_or_dist(sc,seg.coor);
-
+% compute the attitude of fault segment,
+% strike, unit: degree; length, unit: km
+[strike, lenpp]=faultattitude(seg.coor);
+nlen=length(lenpp);
+acc_len=ones(nlen,1);
+for jj=1:nlen
+	acc_len(jj)=sum(lenpp(1:jj));
+end
 % bring in the parameters of fault displacement predictive equation, 
 if srtcmp(tydis{1},'principal')==1
 	vfdpe=fdpe(1);
@@ -76,7 +86,7 @@ for imu=1:nmu
 	  m=m0+im*mbl-mbl/2;
 	  % log(srl)=a+b*m+epsilon*sigma
 	  for iep=1:nep
-	 	 srl=wells_ss(m,epsrl(iep));
+	 	 srl=wells_ss(m,epsrl(iep)); % well_ss: function of surface rupture length of magnitude m(unit: Mw), unit: km 
 		 while srl<=segl
 			% surface rupture length SRL must be less  than fault segment length SEGL, caution! 
 			% start to compute pfd !
@@ -84,17 +94,22 @@ for imu=1:nmu
 			if srtcmp(tydis{1},'principal')==1
 				temp=vfdpe.rup(1)*m+vfdpe.rup(2)
 				prup=exp(temp)/(1+exp(temp));
-
+				% 2ed, determine the location of the middle point of surface rupture
+				% from (segl-srl)/2, to (segl+srl)/2
+				s_in=find(acc_len>=(segl-srl)/2, 1, 'first');
+				e_in=find(acc_len<=(segl+srl)/2, 1, 'last');
 			else
 				% distributed fault displacement, need to interplot rupture probability or 
 				% compute by different equation, use 200x200 grid here, 
 				% if need to use different grid, refer to Petersen et al. 2011
 				if r>=400 % unit: meter
-					temp=vfdpe.rup(1)*log(r)+vfdpe.rup(2); prup=exp(temp);
+					temp=vfdpe.rup(1)*log(r)+vfdpe.rup(2); 
+					prup=exp(temp);
 				else
 					prup=interp1([0,200,400],[0.925,0.190,0.075],r);
 				end
 			end
+
 
 
 
