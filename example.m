@@ -14,11 +14,13 @@
 clear;clc;
 load fdpe  
 fp=rdfault('example.txt');
-sc=rdsc('sc.txt'); % distributed displacement
+sc=rdsc('sc1.txt'); % distributed displacement
 [gfd,gpfd]=rdques('question.txt');
 geo=[sc; fp.coor];
 [cartx,carty]=geo2cart(geo(:,1),geo(:,2));
 cart=[cartx,carty];
 sc=cart(1:length(sc),:);
 fp.coor=cart(length(sc)+1:end,:);
-
+segl=faultlength(fp.coor);
+[strike, lenpp]=faultattitude(fp.coor);
+acc_len=acc_len_fault(lenpp);
