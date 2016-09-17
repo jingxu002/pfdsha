@@ -1,11 +1,11 @@
-function [strike,length]=faultattitude(coor)
+function [strike,lenpp]=faultattitude(coor)
 % FAULT ATTITUDE: COMPUTE ATTITUDE OF STRIKE SLIP FAULT
 % Writer: JingXu    Date: 2016-09-13   Version: 1.0
 % Define Variables:
 %{
 	coor		coordinate of fault segment, unit: km
 	strike		strike of fault segment, unit: degree from east, anti-clockwise
-	length		length of fault segment, unit: km
+	lenpp		length of fault segment, unit: km
 %}
 % Local Variables:
 %{
@@ -27,7 +27,7 @@ end
 
 [nr,nc]=size(coor);
 coor=sortrows(coor,1);
-length=zeros(nr-1,1);
+lenpp=zeros(nr-1,1);
 strike=zeros(nr-1,1);
 
 for ii=2:nr
@@ -36,13 +36,13 @@ for ii=2:nr
 	lengtht=sqrt(tx^2+ty^2);
 	cs=tx/lengtht; ss=ty/lengtht;
 
-	length(ii-1)=lengtht;
+	lenpp(ii-1)=lengtht;
 	if ss>=0
-		striket=acos(cs)*180/pi;
-	elseif cs>=0
-		striket=asin(ss)*180/pi+360;
+		striket=acos(cs);
+	elseif  cs>=0
+		striket=asin(ss)+2*pi;
 	else
-		striket=asin(-ss)*180/pi+180;
+		striket=asin(-ss)+pi;
 	end
 	strike(ii-1)=striket;
 end

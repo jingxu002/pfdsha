@@ -24,3 +24,12 @@ fp.coor=cart(length(sc)+1:end,:);
 segl=faultlength(fp.coor);
 [strike, lenpp]=faultattitude(fp.coor);
 acc_len=acc_len_fault(lenpp);
+ngfd=length(gfd);
+pgfd=zeros(ngfd,1);
+fp.coor=fp.coor(1:40,:);
+for jj=1:ngfd
+    pgfd(jj)=pfdsha(sc(15,:),fp,gfd(jj));
+    % dbstop if error
+end
+
+pgfd=3;
