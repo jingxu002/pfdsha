@@ -26,12 +26,13 @@ segl=faultlength(fp.coor);
 [strike, lenpp]=faultattitude(fp.coor);
 acc_len=acc_len_fault(lenpp);
 ngfd=length(gfd);
+pgfd=pfdsha(sc(20,:),fp,45);
+%{
 pgfd=zeros(ngfd,length(sc));
-% fp.coor=fp.coor(1:40,:);
-
 for jj=1:10
     for ii=1:52
         pgfd(jj,ii)=pfdsha(sc(ii,:),fp,gfd(jj));
     end
 end
+%}
 toc;

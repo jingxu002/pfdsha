@@ -131,7 +131,7 @@ for imu=1:nmu
                     end
                 end
 				pmd_sr=1/ndis;		% probability of middle point of surface rupture location
-				pfd(iep,1)=pfd(iep,1)+pmu*vm0*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
+				pfd(iep,1)=pfd(iep,1)+vm0*pmu*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
 			else
 				% distributed fault displacement, need to interplot rupture probability or 
 				% compute by different equation, use 200x200 grid here, 
