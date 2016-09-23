@@ -10,11 +10,14 @@
     gfd,gpfd		given fault displacemet, unit: cm; given probability of fault displacement
     geo         geography coordinate, logitude & latitude, degrees
     cart        cartesine coordinate, unit: km
+    fd          fault displacement of given annual probability, unit: cm
+    ngpfd       number of given probability, type: INT
+    nsc         number of site coordinates, type: INT
 %}
 clear;clc;
 tic;
 load fdpe  
-fp=rdfault('example.txt');
+fp=rdfault('example.txt'); 
 sc=rdsc('sc1.txt'); % distributed displacement
 [gfd,gpfd]=rdques('question.txt');
 geo=[sc; fp.coor];
@@ -27,12 +30,24 @@ segl=faultlength(fp.coor);
 acc_len=acc_len_fault(lenpp);
 ngfd=length(gfd);
 pgfd=pfdsha(sc(20,:),fp,45);
-%{
+%
 pgfd=zeros(ngfd,length(sc));
-for jj=1:10
-    for ii=1:52
+for jj=1:10   % number of level of given fault displacements
+    for ii=1:52   % number of sites
         pgfd(jj,ii)=pfdsha(sc(ii,:),fp,gfd(jj));
     end
 end
-%}
+%
+ngpfd=length(gpfd);
+nsc=length(sc);
+fd=zeros(nsc,nfd);
+for kk=1:nsc
+    for ll=1:ngpfd
+        temp=interp1(log(pgfd(:,kk)),log(gfd),log(gpfd(ll)),'linear','extrap');
+        fd(kk,ll)=exp(temp);
+    end
+end
 toc;
+plot3(sc(:,1),sc(:,2),fd(:,3));
+xlabel('km'); ylabel('km'); zlabel('Displacement(cm)');
+title('Principal displacement of APE 4E-4');
