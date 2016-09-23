@@ -59,6 +59,7 @@ mbl=0.2;
 % compute length of fault segment, unit: km
 segl=faultlength(seg.coor);
 % determine the type of displacement
+% and the nearest distance from sc to segment
 [tydis_sc,inds_sc]=prin_or_dis(sc,seg.coor);
 % compute the attitude of fault segment,
 % strike, unit: degree; length, unit: km
@@ -69,8 +70,7 @@ if strcmp(tydis_sc,'principal')==1
 	vfdpe=fdpe(1);
 else
 	vfdpe=fdpe(2); 
-	% the nearest distance from sc to segment
-	r=distance(sc,seg.coor);
+    r=distance(sc,seg.coor);
 end
 
 % epsilon range of surface rupture length

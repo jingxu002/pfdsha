@@ -15,7 +15,8 @@ function [tydis,inds]=prin_or_dis(sc,ft)
     diff    vector of AB, point A & B is the fault trace points
     diff1   vector of AP, P is the point need to just 
     diff2   vector of BP,
-    deter   the cross product of vector AP and BP
+    deter   the cross product of vector AP and BP, normalized by |AP|*|BP|, 
+            than, the sine of angle between AP and BP
     theta   the angle between AP and BP
 %}
 
@@ -38,14 +39,14 @@ end
 
 tydis=cell(rs,1);
 inds=ones(rs,1);
-
 for ii=1:rs
-	for jj=2:rf
-        	diff=abs(ft(jj,:)-ft(jj-1,:));
-        	diff1=ft(jj,:)-sc(ii,:);
-        	diff2=ft(jj-1,:)-sc(ii,:);
-		deter=(diff1(1)*diff2(2)-diff1(2)*diff2(1))/norm(diff2)/norm(diff1);
-		theta=asin(abs(deter))*180/pi;
+	for jj=2:rf %#ok<ALIGN>
+        	diff=abs(ft(jj,:)-ft(jj-1,:)); ab=norm(diff);
+        	diff1=ft(jj,:)-sc(ii,:);  ap=norm(diff1);
+        	diff2=ft(jj-1,:)-sc(ii,:); bp=norm(diff2);
+            if ap*bp==0; tydis{ii}='principal';inds(ii)=jj-1;break;end
+            deter=(diff1(1)*diff2(2)-diff1(2)*diff2(1))/ap/bp;
+            theta=asin(abs(deter))*180/pi;
         if theta>=1 %#ok<ALIGN>
 			tydis{ii}='distributed';
 			continue;
@@ -56,8 +57,8 @@ for ii=1:rs
             		tydis{ii}='principal';
                     inds(ii)=jj-1;
             		break;
-		end
-	end
+        end
+    end
 end
 
 

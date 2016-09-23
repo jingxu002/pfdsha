@@ -29,15 +29,16 @@ segl=faultlength(fp.coor);
 [strike, lenpp]=faultattitude(fp.coor);
 acc_len=acc_len_fault(lenpp);
 ngfd=length(gfd);
-pgfd=pfdsha(sc(20,:),fp,45);
-%
+sc1=[sc(20,1)+4,sc(20,2)+6];
+pgfd=pfdsha(sc1,fp,1);
+%{
 pgfd=zeros(ngfd,length(sc));
 for jj=1:10   % number of level of given fault displacements
     for ii=1:52   % number of sites
         pgfd(jj,ii)=pfdsha(sc(ii,:),fp,gfd(jj));
     end
 end
-%
+
 ngpfd=length(gpfd);
 nsc=length(sc);
 fd=zeros(nsc,nfd);
@@ -47,7 +48,8 @@ for kk=1:nsc
         fd(kk,ll)=exp(temp);
     end
 end
-toc;
 plot3(sc(:,1),sc(:,2),fd(:,3));
 xlabel('km'); ylabel('km'); zlabel('Displacement(cm)');
 title('Principal displacement of APE 4E-4');
+%}
+toc;
