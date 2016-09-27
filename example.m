@@ -29,8 +29,8 @@ segl=faultlength(fp.coor);
 [strike, lenpp]=faultattitude(fp.coor);
 acc_len=acc_len_fault(lenpp);
 ngfd=length(gfd);
-sc1=[sc(20,1)+4,sc(20,2)+6];
-pgfd=pfdsha(sc1,fp,1);
+sc1=[sc(20,1)+0.00002,sc(20,2)+0.00005];
+pgfd=pfdsha(sc1,fp,5);
 %{
 pgfd=zeros(ngfd,length(sc));
 for jj=1:10   % number of level of given fault displacements

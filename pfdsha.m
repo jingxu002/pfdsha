@@ -26,6 +26,9 @@ function pgfd=pfdsha(sc,seg,gfd)
 	prup		probability of rupture to surface
 	parup		parameters of  computing prup
 	r		nearest distance from off-fault site to fault trace,unit: meter
+    sc_pd   coordiante of foot of perpendicular of site on fault line segmet, unit: km
+    temp_type   tempary type of distance
+    inds_sc_pd  index of foot of perpendicular of site on which fault line segment, type: INT
 	srl 		surface rupture length of strike slip fault, unit: km
 	epsrl		epsilon of surface rupture length
 	pepsrl		probability of epsilon of surface rupture length
@@ -70,7 +73,8 @@ if strcmp(tydis_sc,'principal')==1
 	vfdpe=fdpe(1);
 else
 	vfdpe=fdpe(2); 
-    r=distance(sc,seg.coor);
+    [r,sc_pd]=distance(sc,seg.coor,strike);
+    [temp_type,inds_sc_pd]=prin_or_dis(sc_pd,seg.coor);
 end
 
 % epsilon range of surface rupture length
@@ -137,16 +141,37 @@ for imu=1:nmu
 				% compute by different equation, use 200x200 grid here, 
 				% if need to use different grid, refer to Petersen et al. 2011
 				% 1st, probability of rupture, prup
-				if r>=400 % unit: meter
+				% the equation of prup of distributed rupture is different from principal rupture 
+				if r>=400 %#ok<ALIGN> % unit: meter
 					temp=vfdpe.rup(1)*log(r)+vfdpe.rup(2); 
-					prup=exp(temp); %#ok<NASGU>
+					prup=exp(temp); 
 				else
-					prup=interp1([0,200,400],[0.925,0.190,0.075],r); %#ok<NASGU>
-				end
+					prup=interp1([0,200,400],[0.925,0.190,0.075],r); 
+                end
+                % 2ed, determine the location of the middle point of surface rupture
+				% from (segl-srl)/2, to (segl+srl)/2
+				dis_in=min((segl-srl)/20,1);  % distance interval of middle point of surface rupture, unit: km
+				ndis=floor((segl-srl)/dis_in);   % number of distance of middle point of surface rupture, type: INT
+				dis_md_sr=linspace(srl/2,segl-srl/2,ndis);	% distance of middle point of surface rupture from vertex point, unit: km			
+				md_sr=zeros(ndis,2);
+				pd=zeros(ndis,1);
+				pdgfd=zeros(ndis,1);
+				for jd=1:ndis %#ok<ALIGN>
+					[md_sr(jd,:),inds_md_sr]=dis2coor(dis_md_sr(jd),seg.coor,strike,acc_len);    % coordinate of middle point of surface rupture, unit: km
+					pd(jd)=pd_on_fault_in(sc_pd,md_sr(jd,:),seg.coor,lenpp,inds_sc_pd,inds_md_sr);       % point distance on fault from site to middle point of rupture, unit: km
+					% md_sr must be on fault, so do not need to just
+					% whether on fault trace, to reduce compute time 
+                    if pd(jd)<=srl/2 
+					  expt_disp=vfdpe.dqun(1)*log(r)+vfdpe.dqun(2);  % expected log displacement, computed by normalized displacement of quadratic model equation(dqun, displacement, quadratic, normalized)
+					  temp_log=(log(gfd/dave)-expt_disp)/vfdpe.dqun(3);
+					  pdgfd(jd)=1-cdf('normal',temp_log,0,1);         % conditional probability of exceedance given displacement (gfd)
+                    end
+                end
+				pmd_sr=1/ndis;		% probability of middle point of surface rupture location
+				pfd(iep,1)=pfd(iep,1)+vm0*pmu*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
             end
          end
       end
-
   end
 end
 
