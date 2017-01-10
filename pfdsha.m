@@ -5,7 +5,9 @@ function pgfd=pfdsha(sc,seg,gfd)
 % Define Variables:
 %{
 	sc		site coordinate, unit: km
-	seg		fault segment parameter, structure variable, tow fields, coor & seis, coordinate unit: km, seis, mu1,p1...,mun,pn, m0,vm0,beta
+	seg		fault segment parameter, structure variable, tow fields, coor & seis, 
+            coordinate unit: km; 
+            seis, mu1,p1...,mun,pn, m0,vm0,beta
 	gfd		given fault displacement, unit: cm
 	pgfd		annual probability of fault displacement exceedance gfd
 %}
@@ -57,7 +59,7 @@ function pgfd=pfdsha(sc,seg,gfd)
 
 dbstop if error
 
-load fdpe
+load fdpe.mat
 mbl=0.2;
 % compute length of fault segment, unit: km
 segl=faultlength(seg.coor);
@@ -69,6 +71,9 @@ segl=faultlength(seg.coor);
 [strike, lenpp]=faultattitude(seg.coor);
 acc_len=acc_len_fault(lenpp);
 % bring in the parameters of fault displacement predictive equation, 
+%vfdpe=struct('name',{},'rup',{},'dave',{},'dbi',{},...
+%    'dbin',{},'dqun',{}); %#ok<NASGU>
+vfdpe=struct(fdpe); %#ok<NASGU>
 if strcmp(tydis_sc,'principal')==1
 	vfdpe=fdpe(1);
 else

@@ -1,0 +1,36 @@
+function pd=pd_on_fault(p1,p2,ft)
+% PD_ON_FAULT: DISTANCE BETWEEN POINTS ON FAULT TRACE, UNIT: KM
+% Writer: JingXu   Date: 2016-09-14   Version: 1.0
+% Define Variables:
+%{
+	p1,p2		coordinates of point one and two, unit: km
+	ft		coordiantes of fault trace, 2 columns 2D matrix, unit: km
+%}
+% Local Variables:
+%{
+	tydis		type of displacement, must be principal
+	inds		index of points, then on which fault line segment
+	strike		strike of fault line segment, degrees from EAST, anti-clock wise
+	lenpp		lenth of fault line segments, unit: km
+%}
+% Algorithm:
+%{
+	The distance between 2 points on fault trace, equal to summary of 
+	length of fault line segment between p1 and p2, then add the length
+	of p1A, p2B
+%}
+
+p=[p1;p2];
+[tydis,inds]=prin_or_dis(p,ft);
+if strcmp(tydis{1},'distributed')==1 || strcmp(tydis{2},'distributed')==1
+	error('The two points must be on fault trace !');
+end
+
+[strike,lenpp]=faultattitude(ft);
+
+if inds(1)==inds(2)
+	% 2 points on the same fault line segment
+	pd=sqrt((p2(1)-p1(1))^2+(p2(2)-p1(2))^2);
+else
+	 
+

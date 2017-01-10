@@ -1,0 +1,8 @@
+# .pdf files
+*.pdf
+
+# vim temporary files
+.*.swp
+
+# .xls files
+*.xls

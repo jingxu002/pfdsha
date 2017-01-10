@@ -1,0 +1,60 @@
+% Script file: example.m
+% Workflow of West Napa fault displacement example
+% Writer: JingXu  Date: 2016-09-11   Version: 1.0
+% Define variables:
+%{
+    fdpe		parameters of fault displacement(unit:cm) predictive equation
+    fp 		    coordinate & seismicy of fault segment, structure variable
+                need to express the pattern of coordinate, liek the direction, length, etc.
+    sc			site coordinate, unit: km
+    gfd,gpfd		given fault displacemet, unit: cm; given probability of fault displacement
+    geo         geography coordinate, logitude & latitude, degrees
+    cart        cartesine coordinate, unit: km
+    fd          fault displacement of given annual probability, unit: cm
+    ngpfd       number of given probability, type: INT
+    nsc         number of site coordinates, distributed, type: INT
+    nsc1        number of site coordiantes, principal, type: INT
+%}
+clear;clc;
+tic;
+load fdpe  
+fp=rdfault('example.txt'); 
+sc=rdsc('sc.txt'); % distributed displacement
+sc1=rdsc('sc1.txt'); % principal displacement
+[gfd,gpfd]=rdques('question.txt');
+geo=[sc; sc1; fp.coor];
+[cartx,carty]=geo2cart(geo(:,1),geo(:,2));
+cart=[cartx,carty];
+sc=cart(1:length(sc),:);
+nsc=length(sc);
+nsc1=length(sc1);
+sc1=cart(nsc+1:nsc+nsc1,:);
+fp.coor=cart(1+nsc+nsc1:end,:);
+segl=faultlength(fp.coor);
+[strike, lenpp]=faultattitude(fp.coor);
+acc_len=acc_len_fault(lenpp);
+ngfd=length(gfd);
+
+%% probability of distributed displacement
+pgfd_dist=zeros(ngfd,length(sc));
+for jj=1:ngfd   % number of level of given fault displacements
+    for ii=1:nsc   % number of sites
+        pgfd_dist(jj,ii)=pfdsha(sc(ii,:),fp,gfd(jj));
+    end
+end
+
+
+
+%%  probability of principal displacement
+pgfd_prin=zeros(ngfd,length(sc1));
+for jj=1:10   % number of level of given fault displacements
+    for ii=1:nsc1   % number of sites
+        pgfd_prin(jj,ii)=pfdsha(sc(ii,:),fp,gfd(jj));
+    end
+end
+
+plot3(sc(:,1),sc(:,2),pgfd_dist(1,:));
+hold on;
+xlabel('km'); ylabel('km'); zlabel('Probability of exceedance of given displacement ');
+plot3(sc1(:,1),sc1(:,2),pgfd_prin(1,:));
+toc;
