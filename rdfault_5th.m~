@@ -31,12 +31,12 @@ if isequal(fid,-1)
 end
 
 
-title=fgetl(fid);
+title=fgetl(fid); %#ok<NASGU>
 nft=fscanf(fid,'%g',[1 1]);
 nseg=fscanf(fid,'%g',[1 nft]);
 fp=struct('coor',{},'seis',{}); % different segment of fault have different parameters
 % structure variable have 2 fields, coordinate and seismicity
-% sumseg=sum(nseg);
+sumseg=sum(nseg); %#ok<NASGU>
 % fp.coor=cell(sumseg,1);
 % fp.seis=cell(sumseg,1);
 for ii=1:nft
@@ -45,12 +45,13 @@ for ii=1:nft
 		nele=sum(nseg(1:ii-1))+jj; % number of elements 
         temp=fscanf(fid,'%g',[2 ncoor]);
         fp(nele).coor=temp';
-		frac=fscanf(fid,'%g',[1 1]); 
-        [m0,mu,vm0,beta]=deal(fscanf(fid,'%g',[1 4]));
         nmi=fscanf(fid,'%d', [1 1]);
+        f_belt=fscanf(fid,'%g',[1 4]);
         mag=fscanf(fid,'%g', [1 nmi]);
-        sf=fscanf(fid,'%g', [1 nmi]);
-        fp(nele).seis=[frac,m0,mu,vm0,beta,nmi,mag,sf];
+        sdf=fscanf(fid,'%g', [1 nmi]);
+		frac=fscanf(fid,'%g',[1 nmi]);       
+        fp(nele).seis=[nmi,frac,f_belt,mag,sdf];
+ 
 	end
 end
 fclose(fid);

@@ -1,5 +1,5 @@
 PFDSHA  zemuhe
-==============
+===============
 probabilistic fault displacement seismic hazard analysis, code in Matlab.
 Example to compute primary displacement on Zemuhe fault,
 seismicity parameters derived from the 5th generation of national seismic ground motion map for China.
@@ -7,11 +7,12 @@ seismicity parameters derived from the 5th generation of national seismic ground
 
 
 Function used to read input
----------------
+------------------------------
 
 
-rdfault: 
-~~~~~~~~
+**rdfault** 
+~~~~~~~~~~~~~
+
 read fault trace and seismicity of every segments, the structure of input file is as follows:
 
 number of faults
@@ -24,18 +25,24 @@ mag, start value (and the end value of last interval)  of magnitude interval
 sf, spatial distribution function
 frac, fraction of earthquake number in magnitude interval
 
-rdsc
-~~~~~~~
+**rdsc**
+~~~~~~~~~~
+
 read site location need to compute fault displacement
 longitude, latitude
 
 
-rdques
-~~~~~~
+**rdques**
+~~~~~~~~~~~
+
 read question, the context in file is as follow:
 number of given fault displacement,
 given fault displacement,
 number of given annual probatility of fault displacement
 given annual probability of fault displacement
+
+Function used to given Fault Displacement Predict Equation(FDPE) 
+------------------------------------------------------------------
+
 
 

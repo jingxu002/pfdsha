@@ -45,12 +45,13 @@ for ii=1:nft
 		nele=sum(nseg(1:ii-1))+jj; % number of elements 
         temp=fscanf(fid,'%g',[2 ncoor]);
         fp(nele).coor=temp';
-		frac=fscanf(fid,'%g',[1 1]); 
-        f_belt=fscanf(fid,'%g',[1 4]);
         nmi=fscanf(fid,'%d', [1 1]);
+        f_belt=fscanf(fid,'%g',[1 4]);
         mag=fscanf(fid,'%g', [1 nmi]);
-        sf=fscanf(fid,'%g', [1 nmi]);
-        fp(nele).seis=[frac,f_belt,nmi,mag,sf];
+        sdf=fscanf(fid,'%g', [1 nmi]);
+		frac=fscanf(fid,'%g',[1 nmi]);       
+        fp(nele).seis=[nmi,f_belt,mag,sdf,frac];
+ 
 	end
 end
 fclose(fid);

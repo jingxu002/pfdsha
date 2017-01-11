@@ -29,8 +29,6 @@ function pgfd=pfdsha_5th(sc,seg,gfd)
 	tydis		type of displacement, principal or distributed, cell array of string
 	jsc		index of site coordinate
 	mu 		maximum magnitude, Mw
-	nmu		number of maximum magnitude
-	pmu		probability of maximum magnitude
 	m0  		minimum magnitude, Mw
 	vm0		annual frequency of magnitude larger than m0
 	beta		parameter value of \beta in G-R relationship
@@ -73,6 +71,9 @@ function pgfd=pfdsha_5th(sc,seg,gfd)
 dbstop if error
 
 load fdpe.mat
+
+% magnitude bin length, unit: Mw, 
+% the interval in 
 mbl=0.2;
 % compute length of fault segment, unit: km
 segl=faultlength(seg.coor);
@@ -107,9 +108,13 @@ pfd=zeros(nep,1);
 
 % initial seismicity parameter values
 frac=seg.seis(1); 
-[m0,mu,vm0,beta]=deal(seg.seis(2:5));
+m0=seg.seis(2);
+mu=seg.seis(3);
+vm0=seg.seis(4);
+beta=seg.seis(5);
 nmi=seg.seis(6);
-mag=seg.seis(7:6+nmi);
+mag=zeros(nmi+1,1);
+mag(1:nmi)=seg.seis(7:6+nmi);
 mag(nmi+1)=mu;
 sf=seg.seis(7+nmi:6+2*nmi);
 
@@ -120,14 +125,14 @@ nm=ceil((mu-m0)/mbl);  % magnitude bin length: mbl Mw
 
 
   for im=1:nm
-	  % pm=(exp(-beta*(m0+mbl*im-mbl))-exp(-beta*(m0+mbl*im)))*degr;
 	  m=m0+im*mbl-mbl/2;   % middle magnitude of corrent magnitude bin
       for ii=1:nmi
           if m<=mag(ii+1) && m>=mag(ii)
               mi=ii;
           end
       end
-      (exp(-beta*mag(mi)-))*degr;
+      vmi=sf(mi)*(exp(-beta*mag(mi)-exp(-beta*mag(mi+1))))*degr; % annual number of earthquake in magnitude interval mi
+      pm=(exp(-beta*(m0+mbl*im-mbl))-exp(-beta*(m0+mbl*im)))*vmi;
 	  dave=wells_dave_ss(m);  % average fault displacement of magnitude m, expected value, unit: cm
 	  % log(srl)=a+b*m+epsilon*sigma
       % srl_low=wells_ss(m,-3);  % srl_low: the minmum surface rupture length of magnitude m
@@ -163,7 +168,7 @@ nm=ceil((mu-m0)/mbl);  % magnitude bin length: mbl Mw
                     end
                 end
 				pmd_sr=1/ndis;		% probability of middle point of surface rupture location
-				pfd(iep,1)=pfd(iep,1)+vm0*pmu*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
+				pfd(iep,1)=pfd(iep,1)+vm0*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
 			else
 				% distributed fault displacement, need to interplot rupture probability or 
 				% compute by different equation, use 200x200 grid here, 
@@ -196,7 +201,7 @@ nm=ceil((mu-m0)/mbl);  % magnitude bin length: mbl Mw
                     end
                 end
 				pmd_sr=1/ndis;		% probability of middle point of surface rupture location
-				pfd(iep,1)=pfd(iep,1)+vm0*pmu*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
+				pfd(iep,1)=pfd(iep,1)+vm0*pm*prup*pepsrl(iep)*pmd_sr*sum(pdgfd);   % annual probability of exceedance given fault displacement
             end
          end
       end

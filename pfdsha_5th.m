@@ -22,43 +22,45 @@ function pgfd=pfdsha_5th(sc,seg,gfd)
                 v1,...                  annual number of earthquakes in magnitude interval 
             }
 	gfd		given fault displacement, unit: cm
-	pgfd		annual probability of fault displacement exceedance gfd
+	pgfd	annual probability of fault displacement exceedance gfd
 %}
 % local variables:
 %{
 	tydis		type of displacement, principal or distributed, cell array of string
-	jsc		index of site coordinate
-	mu 		maximum magnitude, Mw
+	jsc         index of site coordinate
+	mu          maximum magnitude, Mw
 	m0  		minimum magnitude, Mw
-	vm0		annual frequency of magnitude larger than m0
+	vm0         annual frequency of magnitude larger than m0
 	beta		parameter value of \beta in G-R relationship
 	degr		denominator in G-R relationship
-	nm		number of magnitude bin
-	mbl	 	magnitude bin length, Mw
-	pm		probability of magnitude m
+	nm          number of magnitude bin
+	mbl         magnitude bin length, Mw
+	pm          probability of magnitude m
 	prup		probability of rupture to surface
 	parup		parameters of  computing prup
-	r		nearest distance from off-fault site to fault trace,unit: meter
-    sc_pd   coordiante of foot of perpendicular of site on fault line segmet, unit: km
+	r           nearest distance from off-fault site to fault trace,unit: meter
+    sc_pd       coordiante of foot of perpendicular of site on fault line segmet, unit: km
     temp_type   tempary type of distance
     inds_sc_pd  index of foot of perpendicular of site on which fault line segment, type: INT
 	srl 		surface rupture length of strike slip fault, unit: km
 	epsrl		epsilon of surface rupture length
 	pepsrl		probability of epsilon of surface rupture length
-	nep		number of  epsilon of srl/fault displacement
+	nep         number of  epsilon of srl/fault displacement
 	segl		length of fault segment, unit: km
 	vfdpe		value of parameters of fault displacement predictive equation, structure variable,
-			have fields of: name, rup, dave, dbi, dbin, corrspond to
-			name, probability of surface rupture, average displacement, bilinear equation of displacement, bilinear of normalized displacement
-	strike,lenpp	strike, unit: degree, from East, anti-clock wise; length, unit: km, length of line segment between nebour points on fault trace
+                have fields of: name, rup, dave, dbi, dbin, corrspond to
+                name, probability of surface rupture, average displacement, bilinear equation of displacement, bilinear of normalized displacement
+	strike,lenpp	
+                strike, unit: degree, from East, anti-clock wise; 
+                length, unit: km, length of line segment between nebour points on fault trace
 	nlen		number of length of line segment between points on fault trace
 	acc_len		accumulate length of lien segment between points on fault trace, unit: km
 	dis_in		distance interval of middle point of surface rupture, unit: km
 	ndis		number of distance of middle point of surface rupture, type: INT
 	md_sr		coordinate of middle point of surface rupture, unit: km
 	dis_md_sr	distance of middle point of surface rupture from vertex point, unit: km	
-	pd		point distance on fault from site to middle point of rupture, unit: km
-	xl		ratio between distance from nearest vertex of surface rupture to site and surface rupture length 
+	pd          point distance on fault from site to middle point of rupture, unit: km
+	xl          ratio between distance from nearest vertex of surface rupture to site and surface rupture length 
 	expt_disp	expected log displacement, computed by normalized displacement of quadratic model equation(dqun, displacement, quadratic, normalized)
 	temp		normalized value of log(gfd/dave), follow a normal distribution				  
 	pdgfd		probability of displacement on site (sc), exceedance given fault displacement (gfd)				
@@ -71,7 +73,12 @@ function pgfd=pfdsha_5th(sc,seg,gfd)
 dbstop if error
 
 load fdpe.mat
-mbl=0.2;
+
+% magnitude bin length, unit: Mw, 
+% the interval in practical compute
+mbl=0.1;
+% transfer constant from b-value to beta
+B2BETA=log(10);
 % compute length of fault segment, unit: km
 segl=faultlength(seg.coor);
 % determine the type of displacement
@@ -104,31 +111,31 @@ nep=length(epsrl);
 pfd=zeros(nep,1);
 
 % initial seismicity parameter values
-frac=seg.seis(1); 
+nmi=seg.seis(1); 
 m0=seg.seis(2);
 mu=seg.seis(3);
 vm0=seg.seis(4);
-beta=seg.seis(5);
-nmi=seg.seis(6);
+beta=seg.seis(5)*B2BETA;
 mag=zeros(nmi+1,1);
-mag(1:nmi)=seg.seis(7:6+nmi);
+mag(1:nmi)=seg.seis(6:5+nmi);
 mag(nmi+1)=mu;
-sf=seg.seis(7+nmi:6+2*nmi);
+sf=seg.seis(6+nmi:5+2*nmi);
+frac=seg.seis(6+2*nmi:5+3*nmi);
 
 % bring seismicity parameters in program
-degr=frac/(exp(-beta*m0)-exp(-beta*mu));
+degr=1/(exp(-beta*m0)-exp(-beta*mu));
 nm=ceil((mu-m0)/mbl);  % magnitude bin length: mbl Mw
 
 
 
-  for im=1:nm
+   for im=1:nm
 	  m=m0+im*mbl-mbl/2;   % middle magnitude of corrent magnitude bin
       for ii=1:nmi
           if m<=mag(ii+1) && m>=mag(ii)
               mi=ii;
           end
       end
-      vmi=sf(mi)*(exp(-beta*mag(mi)-exp(-beta*mag(mi+1))))*degr; % annual number of earthquake in magnitude interval mi
+      vmi=sf(mi)*(exp(-beta*mag(mi)-exp(-beta*mag(mi+1))))*degr*frac(mi); % annual number of earthquake in magnitude interval mi
       pm=(exp(-beta*(m0+mbl*im-mbl))-exp(-beta*(m0+mbl*im)))*vmi;
 	  dave=wells_dave_ss(m);  % average fault displacement of magnitude m, expected value, unit: cm
 	  % log(srl)=a+b*m+epsilon*sigma

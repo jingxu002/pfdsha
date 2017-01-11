@@ -19,7 +19,7 @@ tic;
 % load fault displacement prediction equation
 load fdpe  
 % input fault coordinate
-fp=rdfault('example.txt'); 
+fp=rdfault_5th('zmh.txt'); 
 sc=rdsc('sc1.txt'); 
 nst=length(sc);
 [gfd,gpfd]=rdques('question.txt');
@@ -39,7 +39,7 @@ ngfd=length(gfd);
 pgfd=zeros(ngfd,length(sc));
 for jj=1:ngfd   % number of level of given fault displacements
     for ii=1:nst   % number of sites
-        pgfd(jj,ii)=pfdsha(sc(ii,:),fp,gfd(jj));
+        pgfd(jj,ii)=pfdsha_5th(sc(ii,:),fp,gfd(jj));
     end
 end
 
@@ -52,8 +52,8 @@ for kk=1:nst
         fd(kk,ll)=exp(temp);
     end
 end
-plot3(sc(:,1),sc(:,2),fd(:,3));
-xlabel('km'); ylabel('km'); zlabel('Displacement(cm)');
+plot3(geo(1:nsc,1),geo(1:nsc,2),fd(:,3));
+xlabel('longitude'); ylabel('latitude'); zlabel('Displacement(cm)');
 title('Principal displacement of APE 4E-4');
 
 toc;

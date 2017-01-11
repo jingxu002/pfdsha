@@ -6,3 +6,7 @@
 
 # .xls files
 *.xls
+
+# ~ files
+*~
+
