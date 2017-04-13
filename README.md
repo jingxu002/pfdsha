@@ -1,21 +1,20 @@
-# pfdsha
-probabilistic fault displacement seismic hazard analysis, code in Matlab.
+# PFDHA
+probabilistic fault displacement  hazard analysis, code in Matlab.
 
-rdfault: read fault trace and seismicity of every segments, the structure of input file is as follows:
+Input module 
+------------
+functions of input module include as follows:
 
-number of faults
+rdfault5th: read fault trace and seismicity of every segments, the structure of input file is as follows:
 
-number of segments of every fault
+  line1, number of faults
 
-number of points in segment jj on fault ii
+  line2, number of segments of every fault
 
-coordinate of points (longitude, latitude)
+  line3, number of points in segment jj on fault ii
 
-number of maximum magnitude
+  line4-line3+np, coordinate of points (longitude, latitude)
 
-mu1 p1 ... mun pn
+  lin4+np, number of maximum magnitude
 
-minmum magnitude, annual frequency of earthquake which magnitude is larger than m0, parameter value of \beta in G-R relationship
-
-m0, vm0, beta
 
