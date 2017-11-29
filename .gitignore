@@ -1,0 +1,17 @@
+# .pdf files
+*.pdf
+
+# vim temporary files
+.*.swp
+
+# .xls files
+*.xls
+
+# ~ files
+*\~
+
+# .jpg files
+*.jpg
+
+# ddsh
+./ddsh
