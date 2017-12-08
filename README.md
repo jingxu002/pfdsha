@@ -26,17 +26,14 @@ Analysis Procedure
 
 The analysis procedure of program PFDHA include three parts:
 
-	**	Functions for input and preprocessing,
-
-		*rdfault_5th* read in fault parameters
-		from input file *zmh.txt*;
-
-		*rdsc* read in the coordinates of engineering sites 
-		from input file *sc.txt*;
-
-	    *rdques* read in given fault displacement values and
+	*Functions for input and preprocessing
+                "rdfault_5th" read in fault parameters
+		from input file "zmh.txt";
+"rdsc" read in the coordinates of engineering sites 
+		from input file "sc.txt";
+"rdques" read in given fault displacement values and
 		given annual probability of exceedance need to compute from input
-		file *question.txt*.
+		file "question.txt".
 
 		*geo2cart* transform geography coordinates, like 
 		the fault surface trace, to Cartesian coordinate system;
