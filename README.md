@@ -25,34 +25,19 @@ Analysis Procedure
 --------------------
 
 The analysis procedure of program PFDHA include three parts:
-
-	*Functions for input and preprocessing
-                "rdfault_5th" read in fault parameters
-		from input file "zmh.txt";
-"rdsc" read in the coordinates of engineering sites 
-		from input file "sc.txt";
-"rdques" read in given fault displacement values and
-		given annual probability of exceedance need to compute from input
-		file "question.txt".
-
-		*geo2cart* transform geography coordinates, like 
-		the fault surface trace, to Cartesian coordinate system;
-
-		*faultattitude* compute the attitude and length
-		of every sub-faults in fault zones;
-
-		** Compute engine,
-
-		*pfdsha_5th* applies the regression (quadratic) of 
-		displacement normalized by mean value $MD$ 
-		to compute the annual probability of
-		exceedance of given displacement on engineering sites, 
+	* Functions for input and preprocessing
+                *rdfault_5th" read in fault parameters from input file *zmh.txt*;
+*rdsc* read in the coordinates of engineering sites from input file *sc.txt*;
+*rdques* read in given fault displacement values and given annual probability of exceedance need to compute from input
+		file *question.txt*.
+		*geo2cart* transform geography coordinates, like the fault surface trace, to Cartesian coordinate system;
+		*faultattitude* compute the attitude and length of every sub-faults in fault zones;
+		* Compute engine,
+		*pfdsha_5th* applies the regression (quadratic) of  displacement normalized by mean value *MD* 
+		to compute the annual probability of exceedance of given displacement on engineering sites, 
 		and interpolates the displacements correspond to  given APEs.
-	
-	**	Output function,
-
-		*plot_result* generate the figure of 
-		fault displacement hazard curves and 
+	*Output function,
+		*plot_result* generate the figure of fault displacement hazard curves and 
 		the figure of the distribution of displacement under given APE.
 
 
