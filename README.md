@@ -29,7 +29,7 @@ The analysis procedure of program PFDHA include three parts:
 
 * Functions for input and preprocessing
 
-*rdfault_5th" read in fault parameters from input file *zmh.txt*;
+*rdfault_5th* read in fault parameters from input file *zmh.txt*;
 
 *rdsc* read in the coordinates of engineering sites from input file *sc.txt*;
 
