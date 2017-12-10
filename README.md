@@ -27,9 +27,9 @@ Analysis Procedure
 
 The analysis procedure of program PFDHA include three parts:
 
-* Functions for input and preprocessing
+- Functions for input and preprocessing
 
-*rdfault_5th* read in fault parameters from input file *zmh.txt*;
+**rdfault_5th** read in fault parameters from input file *zmh.txt*;
 
 *rdsc* read in the coordinates of engineering sites from input file *sc.txt*;
 
@@ -40,13 +40,13 @@ The analysis procedure of program PFDHA include three parts:
 
 *faultattitude* compute the attitude and length of every sub-faults in fault zones;
 		
-* Compute engine,
+- Compute engine,
 
 *pfdsha_5th* applies the regression (quadratic) of  displacement normalized by mean value *MD* 
 to compute the annual probability of exceedance of given displacement on engineering sites, 
 and interpolates the displacements correspond to  given APEs.
 		
-* Output function,
+- Output function,
 
 *plot_result* generate the figure of fault displacement hazard curves and 
 the figure of the distribution of displacement under given APE.
