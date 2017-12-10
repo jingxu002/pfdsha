@@ -9,7 +9,7 @@ like nuclear installation, oil pipeline, etc.
 
 This package of MATLAB functions named PFDHA,
  present an updated FDPE for strike-slip fault 
-based on moderate and large earthqakes in directory *fdpe*.
+based on moderate and large earthqakes in directory **fdpe**.
 The updated FDPEs include two principal fault displacement models,
 in the form of elliptic and quadratic, respectively.
 
@@ -17,8 +17,8 @@ In addition, a case study of  Zemu River fault in western China,
 is presented to demonstrate the application of PFDHA 
 to a specific fault displacement hazard problem of 
 strike-slip fault under segmental Possion seismicity model,
-in directory *example*.
-The source code in directory *src*.
+in directory **example**.
+The source code in directory **src**.
 
 
 
