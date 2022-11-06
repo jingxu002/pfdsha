@@ -53,4 +53,4 @@ the figure of the distribution of displacement under given APE.
 
 Paper:
 =====================================================
-paper in [JING Xu. 2019. Study on prediction model of surface permanent displacementof strike-slip faults. World Earthquake Engineering, (2): 18-23.(in Chinese)] (http://sjdz.paperonce.org/oa/DArticle.aspx?type=view&id=20190203).
+Reference this [JING Xu. 2019. Study on prediction model of surface permanent displacementof strike-slip faults. World Earthquake Engineering, (2): 18-23.(in Chinese)](http://sjdz.paperonce.org/oa/DArticle.aspx?type=view&id=20190203) paper.
