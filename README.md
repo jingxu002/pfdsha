@@ -53,4 +53,4 @@ the figure of the distribution of displacement under given APE.
 
 Paper:
 ======
-[荆旭-走滑型断层地表永久位移预测模型研究-世界地震工程] (http://sjdz.paperonce.org/oa/DArticle.aspx?type=view&id=20190203)
+[JING Xu. 2019. Study on prediction model of surface permanent displacementof strike-slip faults. World Earthquake Engineering, (2): 18-23.(in Chinese)] (http://sjdz.paperonce.org/oa/DArticle.aspx?type=view&id=20190203)
