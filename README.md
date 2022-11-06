@@ -51,6 +51,6 @@ and interpolates the displacements correspond to  given APEs.
 **plot_result** generate the figure of fault displacement hazard curves and 
 the figure of the distribution of displacement under given APE.
 
-Paper:
-======
-[JING Xu. 2019. Study on prediction model of surface permanent displacementof strike-slip faults. World Earthquake Engineering, (2): 18-23.(in Chinese)] (http://sjdz.paperonce.org/oa/DArticle.aspx?type=view&id=20190203)
+Paper:[JING Xu. 2019. Study on prediction model of surface permanent displacementof strike-slip faults. World Earthquake Engineering, (2): 18-23.(in Chinese)] (http://sjdz.paperonce.org/oa/DArticle.aspx?type=view&id=20190203)
+=====================================================
+
